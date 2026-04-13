@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador de Financiamento de Veículo 2026 | Calcule suas parcelas</title>
+  <meta name="description" content="Simule gratuitamente o financiamento do seu carro em 2026. Calcule parcelas, juros totais e valor final pelo sistema Price ou SAC. Rápido e gratuito." />
+  <meta name="keywords" content="simulador financiamento carro, calcular parcela carro, financiamento veículo 2026, tabela price SAC carro, simulação financiamento auto" />
+  <meta name="robots" content="index, follow" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Simulador de Financiamento de Veículo 2026",
+    "description": "Simule parcelas de financiamento de carro pelo sistema Price ou SAC",
+    "applicationCategory": "FinanceApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --surface2: #eef0f8;
+      --border: #dde1f0;
+      --accent: #4361ee;
+      --accent2: #f72585;
+      --green: #06d6a0;
+      --text: #1a1c2e;
+      --muted: #6c7399;
+      --radius: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    .hero { background: linear-gradient(160deg, #1a1c2e 0%, #2d3170 100%); padding: 52px 20px 48px; text-align: center; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.75); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 20px; }
+    h1 { font-family: 'Syne', sans-serif; font-size: clamp(26px, 5vw, 42px); font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 12px; }
+    h1 span { color: #a5b4fc; }
+    .subtitle { color: rgba(255,255,255,0.5); font-size: 14px; max-width: 460px; margin: 0 auto; line-height: 1.6; }
+
+    .wrapper { max-width: 720px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(67,97,238,0.06); }
+    .card-title { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .grid-2 { grid-template-columns: 1fr; } }
+    .field { margin-bottom: 14px; }
+    label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+
+    .input-wrap { position: relative; }
+    .prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: 600; color: var(--muted); pointer-events: none; }
+    .suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: 600; color: var(--muted); pointer-events: none; }
+
+    input[type="text"], select {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+      padding: 12px 14px 12px 42px; outline: none; transition: border-color 0.2s; -webkit-appearance: none;
+    }
+    select { padding-left: 14px; cursor: pointer; }
+    .has-suffix input { padding-right: 42px; }
+    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(67,97,238,0.1); }
+
+    /* Sistema tabs */
+    .tab-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
+    .tab-btn { padding: 12px; border-radius: 10px; border: 2px solid var(--border); background: var(--surface2); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--muted); }
+    .tab-btn.active { border-color: var(--accent); background: rgba(67,97,238,0.06); color: var(--accent); }
+
+    .btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; padding: 16px; cursor: pointer; transition: opacity 0.2s, transform 0.15s; margin-top: 6px; }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    #result { display: none; animation: fadeUp 0.4s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    @media (max-width: 480px) { .summary-grid { grid-template-columns: 1fr; } }
+
+    .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 14px; text-align: center; }
+    .sum-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .sum-val { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; }
+    .blue { color: var(--accent); }
+    .pink { color: var(--accent2); }
+    .green-c { color: var(--green); }
+
+    /* Tabela parcelas */
+    .parcelas-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; }
+    .parcelas-title { padding: 14px 18px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .parcelas-scroll { max-height: 280px; overflow-y: auto; }
+    .parc-row { display: grid; grid-template-columns: 40px 1fr 1fr 1fr; padding: 10px 18px; font-size: 12px; border-bottom: 1px solid var(--border); }
+    .parc-row:last-child { border-bottom: none; }
+    .parc-row.header { background: var(--surface2); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); position: sticky; top: 0; }
+    .parc-row:nth-child(even) { background: rgba(67,97,238,0.02); }
+
+    .btn-reset { width: 100%; background: transparent; border: 1px solid var(--border); border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted); padding: 13px; cursor: pointer; transition: all 0.2s; margin-top: 6px; }
+    .btn-reset:hover { border-color: var(--muted); color: var(--text); }
+
+    .faq { margin-top: 48px; }
+    .faq h2 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q { width: 100%; background: none; border: none; color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; text-align: left; padding: 16px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .faq-q .arrow { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 11px; transition: transform 0.25s; }
+    .faq-item.open .arrow { transform: rotate(180deg); }
+    .faq-a { font-size: 13px; color: var(--muted); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s; }
+    .faq-item.open .faq-a { max-height: 300px; padding-bottom: 16px; }
+
+    footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--muted); line-height: 1.8; }
+    footer a { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">🚗 Financiamento 2026</div>
+  <h1>Simulador de<br><span>Financiamento de Veículo</span></h1>
+  <p class="subtitle">Calcule suas parcelas pelo sistema Price ou SAC. Veja o total de juros e decida com consciência.</p>
+</div>
+
+<div class="wrapper">
+  <div id="form-card">
+    <div class="card">
+      <div class="card-title">🚗 Dados do veículo</div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Valor do veículo</label>
+          <div class="input-wrap">
+            <span class="prefix">R$</span>
+            <input type="text" id="valor" placeholder="0,00" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Valor da entrada</label>
+          <div class="input-wrap">
+            <span class="prefix">R$</span>
+            <input type="text" id="entrada" placeholder="0,00" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💳 Condições do financiamento</div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Prazo (meses)</label>
+          <select id="prazo">
+            <option value="12">12 meses</option>
+            <option value="24">24 meses</option>
+            <option value="36" selected>36 meses</option>
+            <option value="48">48 meses</option>
+            <option value="60">60 meses</option>
+            <option value="72">72 meses</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Taxa de juros mensal</label>
+          <div class="input-wrap has-suffix">
+            <input type="text" id="taxa" placeholder="1,50" inputmode="decimal" style="padding-left:14px;" />
+            <span class="suffix">% a.m.</span>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Sistema de amortização</label>
+        <div class="tab-group">
+          <button class="tab-btn active" onclick="setTab('price', this)">Tabela Price<br><small style="font-weight:400;font-size:11px">Parcelas fixas</small></button>
+          <button class="tab-btn" onclick="setTab('sac', this)">SAC<br><small style="font-weight:400;font-size:11px">Parcelas decrescentes</small></button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="calcular()">Simular financiamento</button>
+  </div>
+
+  <div id="result">
+    <div class="summary-grid">
+      <div class="sum-card">
+        <div class="sum-label">1ª Parcela</div>
+        <div class="sum-val blue" id="s-primeira">—</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-label">Total de juros</div>
+        <div class="sum-val pink" id="s-juros">—</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-label">Total a pagar</div>
+        <div class="sum-val green-c" id="s-total">—</div>
+      </div>
+    </div>
+
+    <div class="parcelas-box">
+      <div class="parcelas-title">
+        <span>Tabela de parcelas</span>
+        <span id="sistema-label" style="font-size:11px;color:var(--accent);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;"></span>
+      </div>
+      <div class="parcelas-scroll">
+        <div class="parc-row header">
+          <span>#</span><span>Parcela</span><span>Juros</span><span>Saldo devedor</span>
+        </div>
+        <div id="parcelas-body"></div>
+      </div>
+    </div>
+
+    <button class="btn-reset" onclick="resetar()">← Fazer nova simulação</button>
+  </div>
+
+  <section class="faq">
+    <h2>Perguntas frequentes</h2>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Qual a diferença entre Price e SAC?<span class="arrow">↓</span></button>
+      <div class="faq-a">Na Tabela Price as parcelas são fixas do início ao fim, mas você paga mais juros no total. No SAC (Sistema de Amortização Constante) as parcelas começam maiores e diminuem com o tempo, e o total de juros pago é menor. O SAC é mais vantajoso financeiramente, mas exige uma renda maior no início.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Qual taxa de juros usar na simulação?<span class="arrow">↓</span></button>
+      <div class="faq-a">A taxa média de financiamento de veículos no Brasil em 2026 gira em torno de 1,5% a 2,5% ao mês, dependendo do banco, prazo e perfil de crédito do comprador. Consulte sua instituição financeira para obter a taxa exata antes de fechar o contrato.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Quanto de entrada devo dar?<span class="arrow">↓</span></button>
+      <div class="faq-a">A recomendação geral é dar no mínimo 20% do valor do veículo como entrada. Quanto maior a entrada, menor o valor financiado, menores as parcelas e menos juros você pagará no total. Algumas financeiras exigem entrada mínima de 10%.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">O financiamento inclui seguro e outras taxas?<span class="arrow">↓</span></button>
+      <div class="faq-a">Esta simulação considera apenas os juros do financiamento. Na prática, o contrato pode incluir IOF, seguro prestamista, taxas administrativas e registro do contrato, que aumentam o custo efetivo total (CET). Sempre compare o CET, não apenas a taxa de juros nominal.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Posso quitar o financiamento antes do prazo?<span class="arrow">↓</span></button>
+      <div class="faq-a">Sim. A quitação antecipada é um direito do consumidor e gera desconto proporcional dos juros futuros. Pela legislação brasileira, o banco é obrigado a oferecer o saldo devedor com desconto dos juros vincendos quando solicitado.</div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Simulação de caráter informativo. Consulte sua instituição financeira para obter condições reais.</p>
+    <p><a href="privacy.html">Política de Privacidade</a></p>
+  </footer>
+</div>
+
+<script>
+  let sistema = 'price';
+
+  function setTab(s, btn) {
+    sistema = s;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function parseBRL(str) { return parseFloat((str||'0').replace(/\./g,'').replace(',','.')) || 0; }
+  function formatBRL(v) { return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+
+  ['valor','entrada'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      let v = this.value.replace(/\D/g,'');
+      if (!v) { this.value=''; return; }
+      this.value = (parseInt(v)/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    });
+  });
+
+  document.getElementById('taxa').addEventListener('input', function() {
+    this.value = this.value.replace(/[^\d,]/g,'');
+  });
+
+  function calcular() {
+    const valor   = parseBRL(document.getElementById('valor').value);
+    const entrada = parseBRL(document.getElementById('entrada').value);
+    const prazo   = parseInt(document.getElementById('prazo').value);
+    const taxaStr = document.getElementById('taxa').value.replace(',','.');
+    const taxa    = parseFloat(taxaStr) / 100;
+
+    if (valor <= 0) { alert('Informe o valor do veículo.'); return; }
+    if (taxa <= 0)  { alert('Informe a taxa de juros.'); return; }
+    if (entrada >= valor) { alert('A entrada não pode ser maior ou igual ao valor do veículo.'); return; }
+
+    const pv = valor - entrada;
+    let parcelas = [];
+    let totalJuros = 0;
+
+    if (sistema === 'price') {
+      const pmt = pv * (taxa * Math.pow(1+taxa, prazo)) / (Math.pow(1+taxa, prazo) - 1);
+      let saldo = pv;
+      for (let i=1; i<=prazo; i++) {
+        const juros = saldo * taxa;
+        const amort = pmt - juros;
+        saldo -= amort;
+        totalJuros += juros;
+        parcelas.push({ n:i, pmt, juros, saldo: Math.max(saldo,0) });
+      }
+    } else {
+      const amort = pv / prazo;
+      let saldo = pv;
+      for (let i=1; i<=prazo; i++) {
+        const juros = saldo * taxa;
+        const pmt = amort + juros;
+        saldo -= amort;
+        totalJuros += juros;
+        parcelas.push({ n:i, pmt, juros, saldo: Math.max(saldo,0) });
+      }
+    }
+
+    const total = pv + totalJuros;
+
+    document.getElementById('s-primeira').textContent = formatBRL(parcelas[0].pmt);
+    document.getElementById('s-juros').textContent    = formatBRL(totalJuros);
+    document.getElementById('s-total').textContent    = formatBRL(total + entrada);
+    document.getElementById('sistema-label').textContent = sistema === 'price' ? 'Price' : 'SAC';
+
+    const body = document.getElementById('parcelas-body');
+    body.innerHTML = parcelas.map(p => `
+      <div class="parc-row">
+        <span>${p.n}</span>
+        <span>${formatBRL(p.pmt)}</span>
+        <span style="color:var(--accent2)">${formatBRL(p.juros)}</span>
+        <span>${formatBRL(p.saldo)}</span>
+      </div>
+    `).join('');
+
+    document.getElementById('form-card').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function resetar() {
+    document.getElementById('form-card').style.display = 'block';
+    document.getElementById('result').style.display = 'none';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function toggleFaq(btn) { btn.parentElement.classList.toggle('open'); }
+</script>
+</body>
+</html>
